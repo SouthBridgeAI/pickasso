@@ -1,6 +1,6 @@
 {
   "name": "pickasso",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Hrishi Olickel <twitter-@hrishioa> (https://olickel.com)",
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
   "type": "module",
   "types": "./dist/index.d.cts",
   "dependencies": {
+    "clipboardy": "^4.0.0",
     "commander": "^12.1.0"
   },
   "devDependencies": {
