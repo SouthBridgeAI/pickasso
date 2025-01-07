@@ -15,6 +15,12 @@ interface CliOptions {
   keyPath?: string;
   clipboard?: boolean;
 }
+/**
+ * Check if stdout is being piped
+ */
+function isOutputPiped(): boolean {
+  return process.stdout.isTTY === undefined || process.stdout.isTTY === false;
+}
 
 /**
  * Gets a nested value from an object using a dot-notation path
@@ -109,13 +115,13 @@ async function main() {
     let fileContent: string;
 
     if (options.clipboard) {
-      console.log("Reading from clipboard...");
+      !isOutputPiped() && console.log("Reading from clipboard...");
       fileContent = await getClipboardContent();
     } else if (inputFile) {
-      console.log(`Reading from file: ${inputFile}`);
+      !isOutputPiped() && console.log(`Reading from file: ${inputFile}`);
       fileContent = await fs.readFile(inputFile, "utf-8");
     } else if (isStdin) {
-      console.log("Reading from stdin...");
+      !isOutputPiped() && console.log("Reading from stdin...");
       fileContent = await readStdin();
     } else {
       throw new Error(
@@ -158,9 +164,7 @@ async function main() {
     const output = JSON.stringify(selected, null, 2);
     if (options.outFile) {
       await fs.writeFile(options.outFile, output);
-      console.log(`Results written to ${options.outFile}`);
-    } else {
-      console.log(output);
+      !isOutputPiped() && console.log(`Results written to ${options.outFile}`);
     }
   } catch (error) {
     console.error(
